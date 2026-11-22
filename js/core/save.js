@@ -11,12 +11,13 @@
   function defaults(C, data, now) {
     now = now || Date.now();
     const N = data.cols * data.rows, b = new Array(N).fill(null);
-    data.startBoard.forEach((x) => { b[x[0]] = x[1] === 'gen' ? { g: x[2] } : { c: x[1], t: x[2] }; });
+    data.startBoard.forEach((x) => { if (x[1] !== 'gen') b[x[0]] = { c: x[1], t: x[2] }; });   // sisa sel diisi penuh saat mode dibuka
     return {
       v: VERSION, dibuat: now,
       koin: 0, bintang: 0, energi: C.energiMaks, eTime: now,
       merge: { board: b, done: 0, orders: [], oid: 1, lvSeen: 1, dekor: {} },
       ubin: { level: 1, best: 1, run: null },
+      lari: { level: 1, best: 1, menang: 0 },
       iklan: { day: dayKey(now), n: 0 }, iklanTotal: 0, iklanRewarded: 0, iklanInter: 0,
       iap: { hapusIklan: false, beli: [] },
       daily: { last: null, streak: 0 }, boxAt: 0,
@@ -48,7 +49,7 @@
     while (o.v < VERSION) { const f = MIGRATIONS[o.v]; if (!f) return { state: base, migrated: false, reset: true }; o = f(o); }
     // isi field baru yang belum ada (deep 1 level)
     const st = Object.assign({}, base, o);
-    ['merge', 'ubin', 'bonus', 'wal', 'daily', 'iklan', 'iap'].forEach((k) => { st[k] = Object.assign({}, base[k], o[k] || {}); });
+    ['merge', 'ubin', 'lari', 'bonus', 'wal', 'daily', 'iklan', 'iap'].forEach((k) => { st[k] = Object.assign({}, base[k], o[k] || {}); });
     if (!Array.isArray(st.merge.board) || st.merge.board.length !== data.cols * data.rows) st.merge.board = base.merge.board;
     return { state: st, migrated: from !== VERSION, from };
   }

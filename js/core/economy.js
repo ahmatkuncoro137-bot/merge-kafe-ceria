@@ -96,6 +96,7 @@
       ['Pesanan Merge', P.pesananPerHari * H * koinPesanan],
       ['Naik level Merge', (P.naikLevelPerHari || 0) * H * ((C.hadiahNaikLevel && C.hadiahNaikLevel.koin) || 0)],
       ['Menang Susun Ubin', P.menangUbinPerHari * H * koinUbin],
+      ['Menang Lari Koki', (P.menangLariPerHari || 0) * H * (C.lari ? Math.min(C.lari.koinMenangMaks, C.lari.koinMenangDasar + C.lari.koinMenangPerLevel * (P.levelLari || 1)) : 0)],
       ['Kalender harian', P.loginHarian ? H * koinHarian : 0],
       ['Kotak misteri', (P.kotakPerHari || 0) * H * koinKotak],
       ['Bonus daftar', (C.bonusDaftar && C.bonusDaftar.koin) || 0],

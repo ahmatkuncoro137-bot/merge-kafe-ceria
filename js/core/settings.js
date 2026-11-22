@@ -18,6 +18,7 @@
     'bonusDaftar.koin': (v) => int(v, 0, 1e8),
     'iklan.hadiahKoin': (v) => int(v, 0, 1e6), 'iklan.batasPerHari': (v) => int(v, 0, 1000),
     'hadiahNaikLevel.koin': (v) => int(v, 0, 1e7), 'ubin.koinMenangDasar': (v) => int(v, 0, 1e7), 'ubin.koinMenangPerLevel': (v) => int(v, 0, 1e6), 'ubin.koinMenangMaks': (v) => int(v, 0, 1e7),
+    'lari.koinMenangDasar': (v) => int(v, 0, 1e7), 'lari.koinMenangPerLevel': (v) => int(v, 0, 1e6), 'lari.koinMenangMaks': (v) => int(v, 0, 1e7),
     'referral.koinPengundang': (v) => int(v, 0, 1e8), 'referral.koinDiundang': (v) => int(v, 0, 1e8),
     'pendapatan.rpPerRewarded': (v) => int(v, 0, 10000), 'pendapatan.rpPerInterstitial': (v) => int(v, 0, 10000), 'pendapatan.maksPayoutPersen': (v) => int(v, 1, 90),
     metodeAktif: (v) => { if (!Array.isArray(v)) throw new Error('daftar metode'); return v.map(String); }
