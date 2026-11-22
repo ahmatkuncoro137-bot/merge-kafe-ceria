@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#ff8fab">
-<title>Merge Kafe Ceria</title>
+<title>Win Cash Money</title>
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="description" content="Merge Kafe Ceria – game santai gabung kue & susun ubin.">
+<meta name="description" content="Win Cash Money – game santai: gabung roti di kafe, susun ubin buah, dan lari koki. Koin dari main &amp; iklan.">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -110,7 +110,7 @@
 <div id="start">
   <div class="sbg"></div>
   <div class="sIn">
-    <div class="logo"><span>Merge</span><b>Kafe Ceria</b></div>
+    <div class="logo wcm"><span>💵 Win</span><b>Cash Money</b></div>
     <div class="sChars"><img class="sChar" data-art="karakter" alt="Mbak Koki"><img class="sChar s2" data-art="karakter2" alt="Mas Koki"></div>
     <div class="sCard" id="sDaily">
       <div class="sHead"><span>🎁 Hadiah Harian</span><span class="streak">🔥 <b id="sStreak">0</b> hari beruntun</span></div>
@@ -130,6 +130,9 @@
     <div class="modes">
       <button class="mode m1" id="btnMain"><img data-art="tepung4" alt=""><b>Merge Kafe</b><small>Gabung &amp; layani pelanggan</small></button>
       <button class="mode m2" id="btnUbin"><img data-art="ubin_ikon" alt=""><b>Susun Ubin</b><small id="sUbinLv">Level 1</small></button>
+    </div>
+    <div class="modes">
+      <button class="mode m3" id="btnLari"><img data-art="lari_ikon" alt=""><span><b>Lari Koki</b><small id="sLariLv">Level 1 · geser &amp; kumpulkan kru</small></span><i class="newTag">BARU</i></button>
     </div>
     <div class="sRow2"><button class="rankBtn" id="btnRank">🏆 Ranking</button><button class="rankBtn" id="btnToko" hidden>🛍️ Toko</button></div>
     <div class="sFoot">Tanpa deposit · Tanpa judi · Koin dari main &amp; iklan</div>
@@ -158,6 +161,8 @@
 <script src="js/core/iap.js"></script>
 <script src="js/modes/merge.js"></script>
 <script src="js/modes/ubin.js"></script>
+<script src="js/modes/lari-logic.js"></script>
+<script src="js/modes/lari.js"></script>
 <script src="js/ui/shell.js"></script>
 <script src="js/app.js"></script>
 </body>
