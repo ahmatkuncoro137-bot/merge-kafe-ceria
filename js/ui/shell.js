@@ -90,6 +90,7 @@
     $('#cal').innerHTML = C.hadiahHarian.map((r, i) => `<div class="day${i < got ? ' got' : ''}${i === todayIdx ? ' today' : ''}${i === 6 ? ' big' : ''}">Hari ${i + 1}<img src="${ART.url(rewardIcon(r))}"><div class="amt">${rewardLabel(r)}</div></div>`).join('');
     const kb = $('#btnKlaim'); kb.disabled = claimed; const rr = C.hadiahHarian[Math.max(0, todayIdx)]; kb.textContent = claimed ? 'Sudah diklaim ✓ Besok balik lagi ya' : `Klaim Hari ${todayIdx + 1}` + (rr.koin ? ` · +${koinTxt(rr.koin)}` : rr.energi ? ` · +${rr.energi} Energi` : '');
     const left = S.boxAt - Date.now(); $('#sKotakT').textContent = left <= 0 ? 'Siap dibuka! 🎉' : 'Buka lagi ' + mmss(left);
+    $('#sLariLv').textContent = `Level ${S.lari.level} · geser & kumpulkan kru`;
     $('#sUbinLv').textContent = `Level ${S.ubin.level} · Bonus ${fmt(C.bonusLevel.koin)} Koin di Lv ${C.bonusLevel.level}`;
     const nx = App.merge.nextTeaser(); $('#sNextT').textContent = nx ? nx.t : 'Semua terbuka!'; $('#sNextS').textContent = nx ? `terbuka di Lv ${nx.l} (kamu Lv ${App.merge.level()})` : '';
     const tp = tarikProgress(); $('#sTarikBar').style.width = tp.pct + '%'; $('#sTarikPct').textContent = Math.floor(tp.pct) + '%';
@@ -114,6 +115,7 @@
   }
   if (App.iap && App.iap.enabled() && App.iap.products().length) { $('#btnToko').hidden = false; $('#btnToko').onclick = openToko; }
   $('#btnUbin').onclick = () => { $('#start').hidden = true; App.fx.unlockAudio(); App.ubin.open(); };
+  $('#btnLari').onclick = () => { $('#start').hidden = true; App.fx.unlockAudio(); App.lari.open(); };
   $('#btnHome').onclick = () => { renderStart(); $('#start').hidden = false; };
   $('#btnMain').onclick = () => { $('#start').hidden = true; App.fx.unlockAudio(); sfx.spawn(); App.merge.say('Halo! Bantu kami layani pelanggan ya 💕', 0); setTimeout(() => { if ($('#start').hidden) App.merge.say('Aku siap masak! Ayo gabung bahannya 👨‍🍳', 1); }, 2700); };
   $('#hudStreak').onclick = () => { renderStart(); $('#start').hidden = false; };
