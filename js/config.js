@@ -1,7 +1,7 @@
 /* ===== PENGATURAN GAME (ubah di sini) ===== */
 (function (root) {
 const GAME_CONFIG = {
-  namaGame: 'Merge Kafe Ceria',
+  namaGame: 'Win Cash Money',
   namaKoin: 'Koin',
 
   // Kurs penukaran: sekian koin = sekian rupiah. Sengaja KONSERVATIF (angka koin besar & memuaskan, nilai rupiah kecil).
@@ -15,7 +15,7 @@ const GAME_CONFIG = {
   // Pilihan nominal di form (rupiah)
   pilihanNominalRupiah: [5000, 10000],
 
-  // Energi
+  // Energi (TIDAK dipakai lagi: Merge Kafe tanpa generator; disimpan agar simpanan lama tetap kompatibel)
   energiMaks: 100,
   energiRegenDetik: 60,   // +1 energi tiap 60 detik
   energiPerKlik: 1,       // biaya 1x ketuk generator
@@ -43,12 +43,14 @@ const GAME_CONFIG = {
   // Pesanan selesai per naik level
   pesananPerLevel: 4,
   // Hadiah naik level
-  hadiahNaikLevel: { koin: 150, energiPenuh: true },
+  hadiahNaikLevel: { koin: 150 },
+  // Merge Kafe: papan selalu penuh (tanpa generator/energi); iklan antar level saat naik level
+  merge: { iklanNaikLevel: true },
 
   // Hadiah login harian (7 hari, berulang). Bolos sehari = mulai dari hari 1 lagi.
   hadiahHarian: [
-    { koin: 100 }, { energi: 20 }, { koin: 200 }, { kotak: 1 },
-    { koin: 300, bintang: 1 }, { energi: 50 }, { koin: 600, bintang: 2 }
+    { koin: 100 }, { bintang: 1 }, { koin: 200 }, { kotak: 1 },
+    { koin: 300, bintang: 1 }, { bintang: 2 }, { koin: 600, bintang: 2 }
   ],
 
   // Kotak misteri gratis tiap X jam. Peluang ditampilkan ke pemain.
@@ -57,8 +59,7 @@ const GAME_CONFIG = {
     hadiah: [
       { peluang: 40, koin: 100 },
       { peluang: 20, koin: 250 },
-      { peluang: 20, energi: 15 },
-      { peluang: 10, bintang: 1 },
+      { peluang: 30, bintang: 1 },
       { peluang: 10, item: 3 }   // 1 barang tingkat 3 acak masuk papan
     ]
   },
@@ -105,6 +106,16 @@ const GAME_CONFIG = {
     iklanAntarLevel: true    // iklan interstitial (CONTOH) setiap naik level
   },
 
+  /* ===== MODE LARI KOKI (lari warna) ===== */
+  lari: {
+    koinMenangDasar: 50,     // koin saat menang level = dasar + perLevel x level (maks koinMenangMaks)
+    koinMenangPerLevel: 15,
+    koinMenangMaks: 220,
+    lanjutPerLevel: 1,       // "Lanjut" setelah kru habis (nonton iklan), sekian kali per level
+    iklanAntarLevel: true,   // iklan interstitial (CONTOH) setiap naik level
+    kecepatan: 9             // satuan jalan per detik
+  },
+
   // Bonus pencapaian: sampai level X di Susun Ubin dapat bonus rupiah,
   // TAPI baru bisa dicairkan setelah total nonton iklan >= minIklan.
   bonusLevel: { level: 5, koin: 50000, minIklan: 150 },
@@ -126,13 +137,12 @@ const GAME_CONFIG = {
   pendapatan: { rpPerRewarded: 20, rpPerInterstitial: 8, maksPayoutPersen: 40, kuotaTarikDariIklan: true },
   // Profil pemain rata-rata untuk estimasi (per hari aktif)
   estimasiProfil: { hari: 30, rewardedPerHari: 8, interstitialPerHari: 6, pesananPerHari: 15, levelMerge: 6,
-    menangUbinPerHari: 5, levelUbin: 8, naikLevelPerHari: 1, kotakPerHari: 3, loginHarian: true, referralPerPemain: 0.2 },
+    menangUbinPerHari: 5, levelUbin: 8, menangLariPerHari: 3, levelLari: 6, naikLevelPerHari: 1, kotakPerHari: 3, loginHarian: true, referralPerPemain: 0.2 },
 
   /* ===== PEMBELIAN DALAM APLIKASI (opsional, PLACEHOLDER -> Google Play Billing) =====
    * Pembelian TIDAK PERNAH memberi koin yang bisa ditarik (bukan deposit). Hanya kenyamanan. */
   iap: { aktif: true, produk: [
-    { id: 'hapus_iklan', nama: 'Hapus Iklan', harga: 'Rp15.000', ket: 'Iklan antar level hilang selamanya. Iklan berhadiah tetap bisa kamu pilih sendiri.', efek: { hapusIklan: true } },
-    { id: 'paket_energi', nama: 'Paket Energi', harga: 'Rp5.000', ket: '+300 energi untuk Merge Kafe.', efek: { energi: 300 } }
+    { id: 'hapus_iklan', nama: 'Hapus Iklan', harga: 'Rp15.000', ket: 'Iklan antar level hilang selamanya. Iklan berhadiah tetap bisa kamu pilih sendiri.', efek: { hapusIklan: true } }
   ] },
 
   // Ranking: DATA CONTOH untuk preview (versi asli butuh server)

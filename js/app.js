@@ -16,8 +16,9 @@
   if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !window.Capacitor && !/[?&]nosw=1/.test(location.search)) {
     window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => { /* offline tetap jalan tanpa SW */ }));
   }
-  // Hook untuk tes otomatis (hanya ?debug=1)
-  if (false) { // debug dimatikan di versi publik
-    window.__MG = { get S() { return App.state; }, App, debugAddKoin: (n) => { App.state.koin += n; App.store.saveNow(); App.shell.hud(); } };
+  // Hook untuk tes otomatis (hanya ?debug=1). DEBUG_HOOK di-set false oleh scripts/build-dist.js untuk build publik.
+  const DEBUG_HOOK = false;
+  if (DEBUG_HOOK && /[?&]debug=1/.test(location.search)) {
+    /* hook debug dihapus di build publik */
   }
 })(window.App);
