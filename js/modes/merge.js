@@ -1,4 +1,5 @@
-/* Mode MERGE KAFE: papan 7x8, generator, gabung barang, pesanan pelanggan, dekor, naik level. */
+/* Mode MERGE KAFE: papan 7x8 SELALU PENUH (tanpa generator/energi). Pilih 2 barang sama -> gabung, sel kosong langsung terisi
+ * barang baru, papan tidak pernah buntu (selalu ada pasangan). Pesanan pelanggan, dekor, naik level (+ iklan antar level). */
 (function (App) {
   'use strict';
   const C = App.C, D = App.data.merge, S = App.state, MS = S.merge;
@@ -26,9 +27,9 @@
   /* ---------- LAYOUT ---------- */
   function layout() {
     const app = $('#app'), W = app.clientWidth, H = app.clientHeight;
-    const scene = H < 760 ? Math.max(140, Math.round(H * .22)) : 222; // layar pendek: adegan diperkecil agar papan tetap enak disentuh
-    const fixed = 46 + 86 + 8 + 34 + 58 + scene;
-    const c = Math.floor(Math.min((W - 14) / COLS, (H - fixed) / ROWS, 64));
+    const scene = H < 760 ? Math.max(140, Math.round(H * .22)) : Math.min(222, Math.max(176, Math.round(H * .2))); // layar pendek: adegan diperkecil agar papan tetap enak disentuh
+    const fixed = 46 + 92 + 14 + 34 + 58 + scene;
+    const c = Math.floor(Math.min((W - 18) / COLS, (H - fixed) / ROWS, 74));
     document.documentElement.style.setProperty('--c', c + 'px');
     CELL = c;
   }
@@ -97,10 +98,11 @@
     const target = centerOf(el);
     idx.forEach((i) => { const ie = boardEl.querySelector(`.it[data-i="${i}"]`); if (ie) fly(artOf(MS.board[i]), centerOf(ie), target); MS.board[i] = null; });
     if (sel != null && !MS.board[sel]) sel = null;
+    const dropD = fillBoard();
     MS.done++; MS.orders = MS.orders.filter((x) => x !== o);
     const nO = newOrder(); MS.orders.splice(Math.min(2, MS.orders.length), 0, nO);
     App.wallet.credit(o.koin, 'pesanan'); S.bintang += o.bintang;   // dicatat bersamaan dengan papan (satu kali simpan)
-    saveNow(); renderBoard();
+    saveNow(); renderBoard({ drop: dropD });
     el.classList.add('out');
     setTimeout(() => {
       burst(target.x, target.y, 26);
@@ -127,9 +129,10 @@
     MS.board.forEach((it, i) => {
       if (!it) return;
       const e = document.createElement('div'), { x, y } = cellXY(i);
-      e.className = 'it' + (it.g ? ' gen' : '') + (sel === i ? ' sel' : '') + (opts.pop === i ? ' pop' : '');
+      e.className = 'it' + (sel === i ? ' sel' : '') + (opts.pop === i ? ' pop' : '') + (opts.drop && opts.drop.indexOf(i) >= 0 ? ' drop' : '');
+      if (opts.drop) e.style.animationDelay = (Math.floor(i / COLS) * 25) + 'ms';
       e.dataset.i = i; e.style.left = x + 'px'; e.style.top = y + 'px';
-      e.innerHTML = `<img src="${ART.url(artOf(it))}">` + (it.g ? '' : `<span class="lvl">${it.t}</span>`);
+      e.innerHTML = `<img src="${ART.url(artOf(it))}" alt="">` + `<span class="lvl">${it.t}</span>`;
       if (opts.from && opts.from.i === i) {
         e.style.transition = 'none'; e.style.left = opts.from.x + 'px'; e.style.top = opts.from.y + 'px'; e.style.transform = 'scale(.4)';
         requestAnimationFrame(() => requestAnimationFrame(() => { e.style.transition = 'left .28s cubic-bezier(.3,1.4,.5,1),top .28s cubic-bezier(.3,1.4,.5,1),transform .28s'; e.style.left = x + 'px'; e.style.top = y + 'px'; e.style.transform = ''; }));
@@ -140,15 +143,14 @@
   }
   function info() {
     const b = $('#btnBuang'), t = $('#infoText');
-    if (sel == null || !MS.board[sel]) { b.hidden = true; t.textContent = 'Seret 2 barang yang sama untuk digabung ✨ Ketuk generator untuk bikin bahan.'; return; }
+    if (sel == null || !MS.board[sel]) { b.hidden = true; t.textContent = 'Pilih 2 barang yang sama untuk digabung ✨ (ketuk-ketuk atau seret)'; return; }
     const it = MS.board[sel];
-    if (it.g) { b.hidden = true; t.textContent = `${CHAINS[it.g].gen}: ketuk untuk bikin ${CHAINS[it.g].names[1]} (−${C.energiPerKlik} energi)`; return; }
     b.hidden = false;
     t.textContent = it.t < MAXT ? `${nameOf(it)} (Lv ${it.t}) → gabung 2 jadi ${CHAINS[it.c].names[it.t + 1]}` : `${nameOf(it)} (Lv ${it.t}) – tingkat tertinggi! 🎉`;
   }
   $('#btnBuang').onclick = () => {
     if (sel == null) return; const it = MS.board[sel];
-    modal(`<h3>Buang?</h3><p>${nameOf(it)} akan dibuang dari papan (tidak dapat koin).</p>`, [{ t: 'Batal' }, { t: 'Buang', p: 1, f: () => { MS.board[sel] = null; sel = null; save(); renderBoard(); } }]);
+    modal(`<h3>Ganti barang?</h3><p>${nameOf(it)} dibuang dan diganti barang baru (tidak dapat koin).</p>`, [{ t: 'Batal' }, { t: 'Ganti', p: 1, f: () => { const k = sel; MS.board[k] = null; sel = null; const drop = fillBoard(); save(); renderBoard({ drop }); } }]);
   };
 
   function emptyNear(i) {
@@ -156,28 +158,41 @@
     for (let k = 0; k < N; k++) if (!MS.board[k]) { const d = Math.hypot(Math.floor(k / COLS) - r0, k % COLS - c0) + Math.random() * .1; if (d < bd) { bd = d; best = k; } }
     return best;
   }
-  function tapGen(i) {
-    regen();
-    const it = MS.board[i];
-    if (S.energi < C.energiPerKlik) { sfx.no(); modal(`<h3>Energi habis</h3><p>Energi nambah sendiri +1 tiap ${C.energiRegenDetik} detik. Istirahat dulu ya ☕</p>`); return; }
-    const k = emptyNear(i);
-    if (k < 0) { sfx.no(); toast('Papan penuh! Gabungkan atau kirim barang dulu.'); return; }
-    if (S.energi >= C.energiMaks) S.eTime = Date.now();
-    S.energi -= C.energiPerKlik;
-    MS.board[k] = { c: it.g, t: Math.random() < .12 ? 2 : 1 };
-    save(); sfx.spawn(); hud();
-    renderBoard({ from: { i: k, ...cellXY(i) } });
-    const ge = boardEl.querySelector(`.it[data-i="${i}"]`); if (ge) { ge.classList.add('wiggle'); }
+  /* ---------- PAPAN PENUH: isi ulang & anti-buntu ---------- */
+  const PD = D.papan || { peluangT2: .18 };
+  const rndItem = () => ({ c: CH[Math.floor(Math.random() * CH.length)], t: Math.random() < PD.peluangT2 ? 2 : 1 });
+  const canMerge = (A, B) => !!(A && B && !A.g && !B.g && A.c === B.c && A.t === B.t && A.t < MAXT);
+  function hasPair() {
+    const seen = {};
+    for (let i = 0; i < N; i++) { const x = MS.board[i]; if (!x || x.g || x.t >= MAXT) continue; const k = x.c + x.t; if (seen[k]) return true; seen[k] = 1; }
+    return false;
+  }
+  // isi semua sel kosong; bila tidak ada pasangan sama sekali, koki menyamakan satu barang (papan tidak pernah buntu)
+  function fillBoard() {
+    const filled = [];
+    for (let i = 0; i < N; i++) { const x = MS.board[i]; if (!x || x.g) { MS.board[i] = rndItem(); filled.push(i); } }
+    if (!hasPair()) {
+      const low = []; for (let i = 0; i < N; i++) if (MS.board[i].t < MAXT) low.push(i);
+      if (low.length >= 2) { const a = low[Math.floor(Math.random() * low.length)]; let b = a; while (b === a) b = low[Math.floor(Math.random() * low.length)]; MS.board[b] = { c: MS.board[a].c, t: MS.board[a].t }; filled.push(b); }
+      else { for (let i = 0; i < N; i++) if (MS.board[i].t >= MAXT && low.indexOf(i) < 0 && filled.length < 2) { MS.board[i] = { c: 'tepung', t: 1 }; filled.push(i); } }
+    }
+    return filled;
+  }
+  function hintMatches(i) {
+    const it = MS.board[i]; if (!it) return;
+    boardEl.querySelectorAll('.it').forEach((el) => { const j = +el.dataset.i; if (j !== i && canMerge(it, MS.board[j])) el.classList.add('match'); });
   }
   function tryMerge(a, b) {
     const A = MS.board[a], B = MS.board[b];
     if (!A || a === b) return false;
-    if (!B) { MS.board[b] = A; MS.board[a] = null; if (sel === a) sel = b; save(); renderBoard(); return 'move'; }
-    if (!A.g && !B.g && A.c === B.c && A.t === B.t && A.t < MAXT) {
-      MS.board[b] = { c: A.c, t: A.t + 1 }; MS.board[a] = null; sel = b; save();
-      renderBoard({ pop: b });
+    if (!B) { MS.board[b] = A; MS.board[a] = null; if (sel === a) sel = b; fillBoard(); save(); renderBoard(); return 'move'; }
+    if (canMerge(A, B)) {
+      MS.board[b] = { c: A.c, t: A.t + 1 }; MS.board[a] = null; sel = null; const drop = fillBoard(); save();
+      renderBoard({ pop: b, drop });
       const ce = boardEl.querySelector(`.it[data-i="${b}"]`), p = centerOf(ce);
       burst(p.x, p.y, 18 + A.t * 6, .8 + A.t * .15); sfx.merge(A.t); buzz(12 + A.t * 6);
+      { const r = document.createElement('i'), q = cellXY(b); r.className = 'mring t' + (A.t + 1); r.style.left = q.x + 'px'; r.style.top = q.y + 'px'; boardEl.appendChild(r); setTimeout(() => r.remove(), 650); }
+      ftext('Lv ' + (A.t + 1), p.x, p.y - CELL * .55);
       if (A.t >= 2) ftext(['', '', 'Bagus!', 'Mantap!', 'Luar biasa!'][A.t], p.x, p.y - 10);
       if (A.t + 1 === MAXT) say(`Wah, ${CHAINS[A.c].names[MAXT]}! Hebat 🎉`);
       return 'merge';
@@ -220,8 +235,10 @@
     if (!d.on) {
       if (cancel) return;
       const it = MS.board[d.i];
-      if (it && it.g) { sel = d.i; tapGen(d.i); }
-      else { sel = sel === d.i ? null : d.i; renderBoard(); }
+      // ketuk-ketuk: pilih barang, lalu ketuk barang yang sama untuk menggabung
+      if (it && sel != null && sel !== d.i && canMerge(MS.board[sel], it)) { tryMerge(sel, d.i); return; }
+      sel = sel === d.i ? null : d.i; renderBoard();
+      if (sel != null) hintMatches(sel);
       return;
     }
     const t = cancel ? -1 : idxAt(e.clientX, e.clientY);
@@ -236,15 +253,15 @@
   function levelUp() {
     const L = level(); if (L <= MS.lvSeen) return;
     MS.lvSeen = L; const h = C.hadiahNaikLevel;
-    if (h.energiPenuh) S.energi = Math.max(S.energi, C.energiMaks);
     App.wallet.credit(h.koin, 'naik-level'); saveNow(); hud(); renderDekor();
     confetti(); sfx.yay(); setTimeout(sfx.yay, 450); buzz([40, 60, 40, 60, 80]);
     const unl = [];
     C.pelanggan.forEach((c, i) => { if (c.level === L) unl.push(`<div class="unl"><img src="${ART.url('wajah' + i)}"><div><b>Pelanggan baru: ${c.nama}</b><br>${c.cerita}</div></div>`); });
     C.dekor.forEach((d) => { if (d.minLevel === L) unl.push(`<div class="unl"><img src="${ART.url('d_' + d.id)}"><div><b>Dekor terbuka: ${d.nama}</b><br>Buka pakai ${d.bintang} ⭐</div></div>`); });
     const nx = nextTeaser();
-    modal(`<h3>NAIK LEVEL!</h3><div class="lvbig">${L}</div>${rewardHTML({ koin: h.koin })}<p>${h.energiPenuh ? 'Energi diisi penuh ⚡' : ''}</p>${unl.join('')}${nx ? `<p class="odds">Berikutnya: ${nx.t} di Lv ${nx.l} 👀</p>` : ''}`,
-      [{ t: 'Asyik!', p: 1, f: () => { const c = centerOf($('#hudKoin img')); burst(c.x, c.y, 16); bump('#hudKoin'); sfx.coin(); } }]);
+    modal(`<h3>NAIK LEVEL!</h3><div class="lvbig">${L}</div>${rewardHTML({ koin: h.koin })}${unl.join('')}${nx ? `<p class="odds">Berikutnya: ${nx.t} di Lv ${nx.l} 👀</p>` : ''}`,
+      [{ t: 'Asyik!', p: 1, f: () => { const c = centerOf($('#hudKoin img')); burst(c.x, c.y, 16); bump('#hudKoin'); sfx.coin();
+        if (C.merge && C.merge.iklanNaikLevel) setTimeout(() => App.ads.interstitial({ placement: 'merge-naik-level' }), 450); } }]);
     renderOrders();
   }
   function nextTeaser() {
@@ -256,9 +273,11 @@
   }
 
   function placeRandomItem(t) {
-    const k = emptyNear(24); if (k < 0) return false;
+    let k = emptyNear(24);
+    if (k < 0) { const low = []; for (let i = 0; i < N; i++) if (MS.board[i] && MS.board[i].t === 1) low.push(i); k = low.length ? low[Math.floor(Math.random() * low.length)] : 24; }
     MS.board[k] = { c: CH[Math.floor(Math.random() * CH.length)], t }; saveNow(); renderBoard({ pop: k }); return true;
   }
-  function init() { layout(); ensureOrders(); renderBoard(); renderDekor(); }
-  App.merge = { init, layout, renderBoard, renderDekor, renderOrders, ensureOrders, level, nextTeaser, levelUp, say, placeRandomItem, artOf, CHAINS, cell: () => CELL };
+  // simpanan lama: hapus generator & isi papan sampai penuh
+  function init() { layout(); MS.board = MS.board.map((x) => (x && x.g ? null : x)); fillBoard(); saveNow(); ensureOrders(); renderBoard(); renderDekor(); }
+  App.merge = { init, layout, renderBoard, renderDekor, renderOrders, ensureOrders, level, nextTeaser, levelUp, say, placeRandomItem, fillBoard, hasPair, canMerge, artOf, CHAINS, cell: () => CELL };
 })(window.App);

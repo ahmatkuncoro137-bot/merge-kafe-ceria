@@ -36,15 +36,17 @@
   /* ---------- GENERATOR LEVEL (selalu bisa diselesaikan) ---------- */
   const rnd = (n) => Math.floor(Math.random() * n);
   const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const GW = 14, GH = 16;   // papan 7 x 8 ubin (satuan = setengah ubin)
   const over = (a, b) => Math.abs(a.cx - b.cx) < 2 && Math.abs(a.cy - b.cy) < 2;
   function genLevel(L) {
     const spec = LV.get(L); let tiles = [];
     if (spec.layout === 'grid') {
-      const n = spec.ubin, cols = 4, rows = Math.ceil(n / cols), gy = Math.min(4, 14 / rows);
-      for (let i = 0; i < n; i++) tiles.push({ cx: 1 + (i % cols) * 3.5, cy: (16 - 2 - (rows - 1) * gy) / 2 + Math.floor(i / cols) * gy, z: 0 });
+      const n = spec.ubin, cols = 4, rows = Math.ceil(n / cols), sx = 3.5, gy = Math.min(4, (GH - 2) / Math.max(1, rows - 1));
+      const x0 = (GW - 2 - (cols - 1) * sx) / 2, y0 = (GH - 2 - (rows - 1) * gy) / 2;
+      for (let i = 0; i < n; i++) tiles.push({ cx: x0 + (i % cols) * sx, cy: y0 + Math.floor(i / cols) * gy, z: 0 });
     } else {
       const layers = spec.lapis, total = spec.ubin;
-      const W = 14, H = 16, w = []; for (let z = 0; z < layers; z++) w.push(layers - z + 2);
+      const W = GW, H = GH, w = []; for (let z = 0; z < layers; z++) w.push(layers - z + 2);
       const sw = w.reduce((a, b) => a + b, 0);
       let left = total;
       for (let z = 0; z < layers && left > 0; z++) {
@@ -115,7 +117,7 @@
     page.querySelectorAll('.ut').forEach((e) => e.remove());
     measure();
     G.tiles.filter((t) => t.state !== 'gone').forEach((t) => {
-      const e = document.createElement('div'); e.className = 'ut in'; e.innerHTML = `<img src="${ART.url(t.type)}">`;
+      const e = document.createElement('div'); e.className = 'ut in'; e.innerHTML = `<img src="${ART.url(t.type)}" alt="">`;
       e.style.width = T + 'px'; e.style.height = T * 1.06 + 'px'; e.style.animationDelay = (t.z * 60 + rnd(120)) + 'ms';
       e.dataset.id = t.id; e.onclick = () => tap(t); t.el = e; page.appendChild(e);
     });
@@ -136,7 +138,7 @@
       else { const p = slotPos(G.out.indexOf(t), 'out'); x = p.x; y = p.y; z = 1500; sc = .92; }
       e.style.left = x + 'px'; e.style.top = y + 'px'; e.style.zIndex = z;
       e.style.width = T * sc + 'px'; e.style.height = T * 1.06 * sc + 'px';
-      e.classList.toggle('cov', !isFree(t)); e.classList.toggle('tr', t.state === 'tray');
+      e.classList.toggle('cov', t.state === 'board' && !isFree(t)); e.classList.toggle('tr', t.state === 'tray');
     });
     const done = G.tiles.filter((t) => t.state === 'gone').length;
     $('#uLv').textContent = G.level; $('#uCnt').textContent = `${done}/${G.tiles.length} ubin`; $('#uBar').style.width = done / G.tiles.length * 100 + '%';
