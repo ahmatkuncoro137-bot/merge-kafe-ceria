@@ -1,7 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><linearGradient id="a" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff9fbe"/><stop offset="1" stop-color="#e65a86"/></linearGradient></defs><ellipse cx="50" cy="89" rx="30" ry="5.5" fill="rgba(80,40,20,.16)"/><path d="M27 58 H73 L66 87 H34 Z" fill="url(#a)" stroke="#b83260" stroke-width="3" stroke-linejoin="round"/>
-     <path d="M37 59 L40 86 M50 59 V86 M63 59 L60 86" stroke="#fff" stroke-width="2.5" opacity=".55"/>
-     <path d="M23 61 Q20 47 33 45 Q35 30 50 30 Q65 30 67 45 Q80 47 77 61 Z" fill="#fff5fa" stroke="#eea0bc" stroke-width="3" stroke-linejoin="round"/>
-     <path d="M30 50 Q50 58 70 50" stroke="#f6c6d7" stroke-width="2.5" fill="none"/>
-     <rect x="35" y="40" width="6" height="2.6" rx="1.3" fill="#4fc3f7" transform="rotate(30 38 41)"/><rect x="58" y="38" width="6" height="2.6" rx="1.3" fill="#ffd54f" transform="rotate(-25 61 39)"/><rect x="44" y="49" width="6" height="2.6" rx="1.3" fill="#81c784"/><rect x="62" y="50" width="6" height="2.6" rx="1.3" fill="#ba68c8" transform="rotate(40 65 51)"/>
-     <path d="M50 22 q3 -9 11 -10" stroke="#3b7a2a" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-     <circle cx="50" cy="26" r="7" fill="#e53950" stroke="#a51d33" stroke-width="2"/><circle cx="47.5" cy="23.5" r="2" fill="#fff" opacity=".8"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="38%" r="75%"><stop offset="0" stop-color="#3ee07a"/><stop offset=".6" stop-color="#12a54c"/><stop offset="1" stop-color="#06612c"/></radialGradient>
+    <linearGradient id="note" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b9f5c9"/><stop offset="1" stop-color="#5fd18a"/></linearGradient>
+    <radialGradient id="coin" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#fff6b0"/><stop offset=".45" stop-color="#ffd23a"/><stop offset="1" stop-color="#e09200"/></radialGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffcf3a"/><stop offset="1" stop-color="#b86b00"/></linearGradient>
+    <linearGradient id="ban" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff5d8f"/><stop offset="1" stop-color="#d81b5c"/></linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <g opacity=".22" fill="#fff">
+    <path d="M256 250 L200 0 H312 Z"/><path d="M256 250 L512 150 V262 Z"/><path d="M256 250 L420 512 H330 Z"/><path d="M256 250 L0 170 V282 Z"/><path d="M256 250 L90 512 H180 Z"/><path d="M256 250 L470 0 H512 V60 Z"/><path d="M256 250 L40 0 H0 V50 Z"/>
+  </g>
+  <!-- uang kertas berkipas -->
+  <g transform="translate(256 300)">
+    <g transform="rotate(-24)"><rect x="-150" y="-78" width="300" height="156" rx="16" fill="url(#note)" stroke="#0b7a37" stroke-width="8"/><circle r="40" fill="none" stroke="#0b7a37" stroke-width="7"/><rect x="-128" y="-56" width="256" height="112" rx="10" fill="none" stroke="#0b7a37" stroke-width="4" opacity=".6"/></g>
+    <g transform="rotate(-8)"><rect x="-150" y="-78" width="300" height="156" rx="16" fill="url(#note)" stroke="#0b7a37" stroke-width="8"/><circle r="40" fill="none" stroke="#0b7a37" stroke-width="7"/><rect x="-128" y="-56" width="256" height="112" rx="10" fill="none" stroke="#0b7a37" stroke-width="4" opacity=".6"/></g>
+    <g transform="rotate(10)"><rect x="-150" y="-78" width="300" height="156" rx="16" fill="url(#note)" stroke="#0b7a37" stroke-width="8"/><circle r="40" fill="none" stroke="#0b7a37" stroke-width="7"/><rect x="-128" y="-56" width="256" height="112" rx="10" fill="none" stroke="#0b7a37" stroke-width="4" opacity=".6"/><text x="0" y="16" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="48" fill="#0b7a37">$</text></g>
+  </g>
+  <!-- koin emas -->
+  <g transform="translate(330 318)">
+    <ellipse cx="0" cy="14" rx="96" ry="96" fill="#8a4f00" opacity=".35"/>
+    <circle r="96" fill="url(#rim)"/><circle r="80" fill="url(#coin)" stroke="#c98200" stroke-width="6"/>
+    <text x="0" y="30" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="96" fill="#b36d00">$</text>
+    <text x="-3" y="25" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="96" fill="#fff3a6">$</text>
+    <path d="M-50 -48 A70 70 0 0 1 30 -66" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round" opacity=".7"/>
+  </g>
+  <!-- pita WIN -->
+  <g transform="translate(256 132) rotate(-6)">
+    <path d="M-170 -10 L-200 30 L-150 34 Z M170 -10 L200 30 L150 34 Z" fill="#9c0f3e"/>
+    <rect x="-160" y="-52" width="320" height="92" rx="22" fill="url(#ban)" stroke="#fff" stroke-width="8"/>
+    <text x="0" y="22" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="72" fill="#fff" letter-spacing="6">WIN</text>
+  </g>
+  <!-- kilau -->
+  <g fill="#fff"><path d="M110 250 l8 22 22 8 -22 8 -8 22 -8 -22 -22 -8 22 -8z"/><path d="M430 200 l6 16 16 6 -16 6 -6 16 -6 -16 -16 -6 16 -6z"/><path d="M400 440 l5 13 13 5 -13 5 -5 13 -5 -13 -13 -5 13 -5z"/></g>
+</svg>
