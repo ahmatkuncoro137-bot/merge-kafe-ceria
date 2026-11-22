@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#ff8fab">
+<title>Merge Kafe Ceria</title>
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="Merge Kafe Ceria – game santai gabung kue & susun ubin.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+  <header id="hud">
+    <div class="pill lv" id="hudLv"><span id="vLv">Lv 1</span><i class="lvbar"><i id="lvFill"></i></i></div>
+    <button class="pill fl" id="hudStreak" aria-label="Hadiah harian"><span class="flame">🔥</span><b id="vStreak">0</b></button>
+    <div class="pill" id="hudEnergi"><img data-art="energi"><b id="vEnergi">100</b><small id="vEnergiT"></small></div>
+    <div class="pill" id="hudKoin"><img data-art="koin"><span class="kcol"><b id="vKoin">0</b><small id="vKoinRp">≈ Rp0</small></span></div>
+    <div class="pill" id="hudBintang"><img data-art="bintang"><b id="vBintang">0</b></div>
+  </header>
+
+  <section id="scene">
+    <img class="latar" data-art="latar" alt="">
+    <img class="dekor d-lampu" data-dekor="lampu" data-art="d_lampu" alt="">
+    <img class="dekor d-rak" data-dekor="rak" data-art="d_rak" alt="">
+    <img class="dekor d-papan" data-dekor="papan" data-art="d_papan" alt="">
+    <img class="dekor d-eskrim" data-dekor="eskrim" data-art="d_eskrim" alt="">
+    <img class="karakter kA" data-art="karakter" alt="Mbak Koki">
+    <img class="karakter kB" data-art="karakter2" alt="Mas Koki">
+    <div class="bubble bA" id="bubble">Halo! Ayo bantu kafeku 💕</div>
+    <div class="bubble bB" id="bubble2"></div>
+    <img class="meja" data-art="meja" alt="">
+    <img class="dekor d-etalase" data-dekor="etalase" data-art="d_etalase" alt="">
+    <img class="dekor d-tanaman" data-dekor="tanaman" data-art="d_tanaman" alt="">
+    <img class="dekor d-kucing" data-dekor="kucing" data-art="d_kucing" alt="">
+    <button id="btnKotak" aria-label="Kotak misteri"><img data-art="kotak_full" alt=""><span id="kotakT">BUKA!</span></button>
+    <div class="area" id="areaTeaser"></div>
+    <div id="dekorBar"></div>
+  </section>
+
+  <section id="orders"></section>
+  <section id="boardWrap"><div id="board"></div></section>
+  <section id="infoBar"><span id="infoText">Seret 2 barang yang sama untuk digabung ✨ Ketuk generator untuk bikin bahan.</span><button id="btnBuang" hidden>Buang</button></section>
+
+  <nav id="nav">
+    <button id="btnHome" aria-label="Menu">🏠</button>
+    <button id="btnIklan"><span class="tag">CONTOH</span>📺 Tonton iklan <b>+Koin</b></button>
+    <button id="btnTarik" class="primary"><span class="t1">💸 Tarik Tunai</span><i class="prog"><i id="tProgBar"></i></i><small id="tProgTxt"></small></button>
+    <button id="btnSuara" aria-label="Suara">🔊</button>
+  </nav>
+</div>
+
+<!-- Halaman Tarik Tunai -->
+<div id="pgTarik" class="page" hidden>
+  <div class="pageHead"><button class="back" data-close="pgTarik">‹</button><h2>Tarik Tunai</h2></div>
+  <div class="pageBody">
+    <div class="soonBanner" id="tSoon" hidden></div>
+    <div class="card saldo">
+      <div class="lbl">Saldo kamu</div>
+      <div class="big"><img data-art="koin"><span id="tSaldo">0</span> Koin</div>
+      <div class="sub">≈ <b id="tSaldoRp">Rp0</b></div>
+    </div>
+    <div class="card info">
+      <div class="row"><span>Kurs</span><b id="tKurs"></b></div>
+      <div class="row"><span>Minimal tarik</span><b id="tMin"></b></div>
+      <div class="row"><span>Batas per hari</span><b id="tCap"></b></div>
+      <div class="row"><span>Sisa batas hari ini</span><b id="tSisa"></b></div>
+      <div class="row"><span>Kuota tarik dari iklan</span><b id="tKuota"></b></div>
+      <p class="note" id="tKuotaNote" style="margin:4px 0 0"></p>
+
+    </div>
+    <form class="card" id="formTarik" autocomplete="off">
+      <h3>Ajukan penarikan</h3>
+      <label>Nominal</label>
+      <div id="tNominal" class="chips"></div>
+      <div class="ferr" data-f="rupiah"></div>
+      <label>Metode penarikan</label>
+      <div id="tMetode" class="metode"></div>
+      <div id="tBankWrap" hidden><label for="tBank">Pilih bank</label><select id="tBank"></select><div class="ferr" data-f="bank"></div></div>
+      <div class="ferr" data-f="metode"></div>
+            <label for="tDana" id="lblNomor">Nomor HP DANA</label>
+      <input id="tDana" inputmode="numeric" placeholder="08xxxxxxxxxx" maxlength="24" autocomplete="off">
+      <div class="ferr" data-f="nomor"></div>
+      <label for="tDana2" id="lblNomor2">Ketik ulang nomor</label>
+      <input id="tDana2" inputmode="numeric" placeholder="harus sama persis" maxlength="24" autocomplete="off" onpaste="return false">
+      <div class="ferr" data-f="nomor2"></div>
+      <label for="tNama" id="lblNama">Nama penerima</label>
+      <input id="tNama" placeholder="Nama sesuai di aplikasi/rekening" maxlength="50" autocomplete="off">
+      <div class="ferr" data-f="nama"></div>
+      <div id="tErr" class="err"></div>
+      <button type="submit" class="primary wide" id="tKirim">Lanjut: Cek Data</button>
+      <p class="note">Pembayaran dikirim manual oleh admin, biasanya 1×24 jam. Koin ditahan selama diproses dan dikembalikan kalau ditolak.</p>
+    </form>
+    <div class="card">
+      <h3>Riwayat penarikan</h3>
+      <div id="tRiwayat"></div>
+    </div>
+    <div class="card" id="tBonus"></div>
+    <div class="card warn">
+      <b>Jujur &amp; aman:</b> Di game ini <u>tidak ada deposit atau top-up</u>, dan tidak ada judi. Koin cuma didapat dari main (pesanan) dan nonton iklan. Jangan pernah kasih PIN, password, atau kode OTP ke siapa pun, admin tidak akan pernah memintanya.
+      <div class="preview">VERSI PREVIEW: data hanya tersimpan di HP ini dan belum ada pembayaran sungguhan.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Layar Mulai -->
+<div id="start">
+  <div class="sbg"></div>
+  <div class="sIn">
+    <div class="logo"><span>Merge</span><b>Kafe Ceria</b></div>
+    <div class="sChars"><img class="sChar" data-art="karakter" alt="Mbak Koki"><img class="sChar s2" data-art="karakter2" alt="Mas Koki"></div>
+    <div class="sCard" id="sDaily">
+      <div class="sHead"><span>🎁 Hadiah Harian</span><span class="streak">🔥 <b id="sStreak">0</b> hari beruntun</span></div>
+      <div class="cal" id="cal"></div>
+      <button class="primary wide" id="btnKlaim">Klaim Hadiah Hari Ini</button>
+    </div>
+    <div class="sRow">
+      <div class="sMini" id="sKotak"><img data-art="kotak_full" alt=""><div><b>Kotak Misteri</b><small id="sKotakT"></small></div></div>
+      <div class="sMini" id="sNext"><span class="lock">🔒</span><div><b id="sNextT">???</b><small id="sNextS"></small></div></div>
+    </div>
+    <div class="sCard sRef" id="sRef"></div>
+    <div class="sCard sTarik">
+      <div class="sHead"><span>💸 Menuju tarik tunai pertama</span><b id="sTarikPct">0%</b></div>
+      <i class="prog big"><i id="sTarikBar"></i></i>
+      <small id="sTarikTxt"></small>
+    </div>
+    <div class="modes">
+      <button class="mode m1" id="btnMain"><img data-art="tepung4" alt=""><b>Merge Kafe</b><small>Gabung &amp; layani pelanggan</small></button>
+      <button class="mode m2" id="btnUbin"><img data-art="ubin_ikon" alt=""><b>Susun Ubin</b><small id="sUbinLv">Level 1</small></button>
+    </div>
+    <div class="sRow2"><button class="rankBtn" id="btnRank">🏆 Ranking</button><button class="rankBtn" id="btnToko" hidden>🛍️ Toko</button></div>
+    <div class="sFoot">Tanpa deposit · Tanpa judi · Koin dari main &amp; iklan</div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="modal" hidden><div class="mbox"><div id="mBody"></div><div class="mBtns" id="mBtns"></div></div></div>
+<div id="toast"></div>
+<canvas id="fx"></canvas>
+
+<!-- urutan penting: config & data -> core -> mode -> ui -> app -->
+<script src="js/config.js"></script>
+<script src="js/data/merge-data.js"></script>
+<script src="js/data/ubin-levels.js"></script>
+<script src="js/art.js"></script>
+<script src="js/core/storage.js"></script>
+<script src="js/core/economy.js"></script>
+<script src="js/core/save.js"></script>
+<script src="js/core/settings.js"></script>
+<script src="js/core/state.js"></script>
+<script src="js/core/server.js"></script>
+<script src="js/core/util.js"></script>
+<script src="js/core/fx.js"></script>
+<script src="js/core/ads.js"></script>
+<script src="js/core/iap.js"></script>
+<script src="js/modes/merge.js"></script>
+<script src="js/modes/ubin.js"></script>
+<script src="js/ui/shell.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
