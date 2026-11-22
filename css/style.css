@@ -353,3 +353,63 @@ select{width:100%;font:inherit;font-size:16px;padding:10px;border-radius:10px;bo
 .soonBanner{background:linear-gradient(135deg,#fff3c4,#ffe08a);border:2px solid #f2b705;border-radius:14px;padding:10px 12px;margin:0 0 10px;color:#6b4a00;display:flex;flex-direction:column;gap:3px;text-align:center}
 .soonBanner b{font-size:15px}.soonBanner small{font-size:12px}
 #formTarik.off{opacity:.55;filter:grayscale(.4)}#formTarik.off *{cursor:not-allowed}
+
+/* ===== UPGRADE PAPAN MERGE (v2): lebih besar, berkedalaman, label jelas ===== */
+#orders{height:92px}
+.order .cn{font-size:12px;font-weight:700}
+.order .rw{font-size:12.5px;font-weight:700}.order .rw img{width:15px}.order .rw small{font-size:10.5px;color:#2b8a3e;font-weight:700}
+.order .need .ni{width:36px;height:36px;border-radius:10px;box-shadow:inset 0 -2px 0 #f3c3d3}
+.order button{font-size:13px;padding:3px 0}
+#boardWrap{padding:9px 0 7px;background:radial-gradient(120% 90% at 50% 0%,#ffd6e2,#f3a9c0)}
+#board{border-radius:16px;background:#ffc2d4;box-shadow:0 0 0 5px #fff,0 0 0 9px #f08bab,0 7px 0 9px #c4577b,0 14px 22px 6px rgba(120,20,60,.28)}
+.cell{background:none}
+.cell:before{content:'';position:absolute;inset:2px;border-radius:11px;background:linear-gradient(#fff7fa,#ffe6ee);box-shadow:inset 0 -3px 0 rgba(214,110,150,.28),inset 0 2px 0 #fff}
+.cell.alt:before{background:linear-gradient(#ffe9f0,#ffd3e1)}
+.cell.alt{background:none}
+.cell.hint:before{background:#fff7c2;box-shadow:inset 0 0 0 3px #ffb300}
+.it{padding:1px}
+.it img{filter:drop-shadow(0 3px 2px rgba(120,40,70,.28))}
+.it .lvl{right:-1px;bottom:-1px;min-width:19px;height:19px;padding:0 4px;border-radius:10px;font-size:12px;line-height:15px;text-align:center;font-weight:800;
+  background:linear-gradient(#a066ff,#6a2fd6);border:2px solid #fff;box-shadow:0 2px 0 rgba(80,20,120,.35);z-index:2}
+.it.gen{padding:3px}
+.it.gen:before{inset:1px;border-radius:13px;background:radial-gradient(circle at 50% 35%,#fffbe0,#ffd04f 70%,#f5a800);box-shadow:inset 0 -4px 0 #d98a00,0 0 0 2px #fff,0 0 12px 2px rgba(255,190,0,.65);animation:genGlow 1.6s ease-in-out infinite}
+@keyframes genGlow{50%{box-shadow:inset 0 -4px 0 #d98a00,0 0 0 2px #fff,0 0 20px 5px rgba(255,190,0,.9)}}
+.it .gz{position:absolute;left:-2px;top:-3px;font-size:10.5px;font-weight:800;color:#fff;background:linear-gradient(#ffb03a,#ff7a00);border:2px solid #fff;border-radius:9px;padding:0 4px;line-height:14px;z-index:2;box-shadow:0 2px 0 rgba(150,70,0,.35)}
+.it.pop{animation:ipop2 .55s cubic-bezier(.2,1.8,.4,1)}
+@keyframes ipop2{0%{transform:scale(.25) rotate(-20deg)}45%{transform:scale(1.4) rotate(6deg)}70%{transform:scale(.92)}100%{transform:scale(1)}}
+.it.match:before{content:'';position:absolute;inset:0;border-radius:12px;box-shadow:0 0 0 3px #ffd000,0 0 14px 4px rgba(255,208,0,.8)}
+.mring{position:absolute;width:var(--c);height:var(--c);z-index:3;pointer-events:none;border-radius:50%;border:5px solid #fff;box-shadow:0 0 12px #ffd54f;animation:mring .6s ease-out forwards}
+.mring.t4,.mring.t5{border-color:#ffd54f}
+@keyframes mring{from{transform:scale(.3);opacity:1}to{transform:scale(2.2);opacity:0}}
+#infoBar{font-size:13px}
+/* Logo Win Cash Money */
+.logo.wcm span{font-size:30px;color:#fff;text-shadow:0 3px 0 #0b7a37,0 5px 0 rgba(0,60,20,.35)}
+.logo.wcm b{font-size:44px;background:linear-gradient(#fff6b0,#ffd23a 55%,#f0a000);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 3px 0 #a35b00) drop-shadow(0 6px 0 rgba(110,50,0,.35))}
+/* ===== LARI KOKI ===== */
+.mode.m3{background:linear-gradient(#5ec8ff,#1f7fd0);animation-delay:.2s;flex-direction:row;justify-content:center;gap:10px;padding:8px 10px}
+.mode.m3 img{width:46px;height:46px}.mode.m3 b{font-size:22px}.mode.m3 small{display:block}
+.mode.m3 span{display:flex;flex-direction:column;align-items:flex-start}
+.page.lari{background:#1f7fd0}
+.lTop{display:flex;align-items:center;gap:8px;padding:8px;height:56px;background:linear-gradient(#2f8fe8,#1f6fd0);box-shadow:0 3px 0 #17549e;color:#fff;z-index:2}
+.lTop .back{flex:none}
+.lDots{flex:1;display:flex;align-items:center;gap:4px;justify-content:center}
+.lDots .d{width:30px;height:30px;border-radius:50%;background:#ffd23a;color:#7a4a00;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 3px #fff;flex:none}
+.lDots .d.n{background:#cfe6ff;color:#1f5fa8}
+.lDots .bar{flex:1;max-width:54px;height:8px;border-radius:4px;background:rgba(255,255,255,.35);overflow:hidden}
+.lDots .bar i{display:block;height:100%;width:0;background:#ffd23a;border-radius:4px}
+.lWrap{flex:1;position:relative;overflow:hidden;touch-action:none}
+#lCv{display:block;width:100%;height:100%;touch-action:none}
+.lLv{position:absolute;left:50%;top:8px;transform:translateX(-50%);font-family:Lucky;font-size:20px;color:#fff;text-shadow:0 2px 0 #17549e,0 0 8px rgba(0,0,0,.25);pointer-events:none}
+.lHint{position:absolute;left:50%;bottom:16%;transform:translateX(-50%);width:min(86%,340px);background:rgba(255,255,255,.95);border-radius:20px;padding:12px 14px;text-align:center;box-shadow:0 8px 20px rgba(0,40,90,.3)}
+.lHint[hidden]{display:none}
+.lHint .arrows{display:flex;align-items:center;justify-content:center;gap:12px;font-size:28px;color:#1f6fd0;font-weight:900}
+.lHint .arrows b{animation:swipe 1.2s ease-in-out infinite alternate;display:inline-block}
+@keyframes swipe{from{transform:translateX(-26px) rotate(-10deg)}to{transform:translateX(26px) rotate(10deg)}}
+.lHint p{margin:2px 0;font-weight:800;font-size:17px;color:#1f4f8a}.lHint small{display:block;font-size:12px;color:#456;margin-bottom:8px}
+.lHint button{width:100%}
+.mode .newTag{position:absolute;top:-6px;right:10px;font-style:normal;background:#ff3d71;color:#fff;font-size:10px;font-weight:800;border-radius:8px;padding:1px 7px;box-shadow:0 2px 0 rgba(0,0,0,.2)}.mode.m3{position:relative}
+/* ===== MERGE v3: papan selalu penuh, tanpa generator/energi ===== */
+#hudEnergi{display:none!important}
+#board .it.drop{animation:dropIn .42s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes dropIn{0%{transform:translateY(-70%) scale(.5);opacity:0}70%{opacity:1}100%{transform:none;opacity:1}}
+#board .it.sel{z-index:3}
